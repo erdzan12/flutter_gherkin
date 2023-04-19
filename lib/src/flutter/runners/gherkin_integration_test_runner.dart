@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:collection/collection.dart';
+import 'package:patrol/patrol.dart';
 
 enum AppLifecyclePhase {
   initialisation,
@@ -44,7 +45,7 @@ abstract class GherkinIntegrationTestRunner {
   late final Iterable<ExecutableStep>? _executableSteps;
   late final Iterable<CustomParameter>? _customParameters;
   late final Hook? _hook;
-  late final IntegrationTestWidgetsFlutterBinding _binding;
+  late final PatrolBinding _binding;
 
   AggregatedReporter get reporter => _reporter;
   Hook get hook => _hook!;
@@ -77,8 +78,9 @@ abstract class GherkinIntegrationTestRunner {
     );
   }
 
-  Future<void> run() async {
-    _binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  Future<void> run(NativeAutomator nativeAutomator) async {
+    _binding = PatrolBinding.ensureInitialized();
+    _binding.nativeAutomator = nativeAutomator;
 
     _binding.framePolicy = framePolicy ?? _binding.framePolicy;
 
